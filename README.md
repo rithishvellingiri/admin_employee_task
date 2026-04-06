@@ -1,18 +1,18 @@
 # admin employee task management system(MERN)
 
-This is a full-stack Task Management System built using the MERN stack. The main idea of this project is to manage employees and their tasks efficiently with proper role-based access.
+this is a full-stack task management system built using the MERN stack. The main idea of this project is to manage employees and their tasks efficiently with proper role-based access.
 
-The application has two separate portals — one for Admin and one for Employees — with controlled access and real-time task tracking.
+the application has two separate portals — one for admin and one for employees — with controlled access and real-time task tracking.
 
 # features
 ## admin portal
-View overall dashboard with employee and task details
-Approve or reject newly registered employees
-Assign tasks to approved employees
-Track task progress (Pending, In Progress, Completed)
+view overall dashboard with employee and task details
+approve or reject newly registered employees
+assign tasks to approved employees
+track task progress (pending, in progress, completed)
 ## employee portal
-Register and wait for admin approval
-View assigned tasks in a simple dashboard
+register and wait for admin approval
+view assigned tasks in a simple dashboard
 Update task status based on progress
 Track personal task activity
 # tech stack
