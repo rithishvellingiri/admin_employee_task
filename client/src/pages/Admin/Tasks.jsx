@@ -20,7 +20,7 @@ const Tasks = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [filter, setFilter] = useState('All');
-  const [formData, setFormData] = useState({ title: '', description: '', assignedTo: '' });
+  const [formData, setFormData] = useState({ title: '', description: '', assignedTo: [] });
 
   useEffect(() => {
     loadData();
@@ -41,15 +41,28 @@ const Tasks = () => {
 
   const handleCreateTask = async (e) => {
     e.preventDefault();
+    if (formData.assignedTo.length === 0) {
+      toast.error('Please select at least one employee');
+      return;
+    }
     try {
       await assignTask(formData);
       toast.success('Task Assigned Successfully');
       setShowModal(false);
-      setFormData({ title: '', description: '', assignedTo: '' });
+      setFormData({ title: '', description: '', assignedTo: [] });
       loadData();
     } catch (err) {
       toast.error('Failed to assign task');
     }
+  };
+
+  const toggleEmployeeSelection = (id) => {
+    setFormData(prev => ({
+      ...prev,
+      assignedTo: prev.assignedTo.includes(id)
+        ? prev.assignedTo.filter(empId => empId !== id)
+        : [...prev.assignedTo, id]
+    }));
   };
 
   const filteredTasks = tasks.filter(task => filter === 'All' || task.status === filter);
@@ -120,16 +133,22 @@ const Tasks = () => {
               <h3 className="text-lg font-bold text-white mb-2 line-clamp-1">{task.title}</h3>
               <p className="text-slate-400 text-sm mb-4 line-clamp-2 h-10">{task.description}</p>
               
-              <div className="pt-4 border-t border-slate-800/50 flex items-center justify-between">
-                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-indigo-400">
-                      {task.assignedTo?.name?.[0]}
-                    </div>
-                    <div>
-                       <p className="text-xs font-semibold text-slate-300">{task.assignedTo?.name}</p>
-                       <p className="text-[10px] text-slate-500">{task.assignedTo?.email}</p>
-                    </div>
-                 </div>
+              <div className="pt-4 border-t border-slate-800/50 flex flex-col gap-3">
+                  <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Assigned To:</p>
+                  <div className="flex -space-x-2 overflow-hidden">
+                    {task.assignedTo?.map((emp, idx) => (
+                      <div 
+                        key={emp._id || idx} 
+                        className="w-8 h-8 rounded-full bg-slate-800 border-2 border-slate-900 flex items-center justify-center text-[10px] font-bold text-indigo-400 group-hover:border-slate-700 transition-all"
+                        title={emp.name}
+                      >
+                        {emp.name?.[0]}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-medium">
+                    {task.assignedTo?.length} Employees
+                  </p>
               </div>
             </motion.div>
           ))
@@ -180,26 +199,31 @@ const Tasks = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-1.5 ml-1">Assign To</label>
-                  <div className="relative">
-                    <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-                    <select
-                      required
-                      className="w-full glass-input pl-10 appearance-none bg-slate-900"
-                      value={formData.assignedTo}
-                      onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
-                    >
-                      <option value="">Select Employee</option>
-                      {employees.map(emp => (
-                        <option key={emp._id} value={emp._id}>{emp.name} ({emp.email})</option>
-                      ))}
-                    </select>
+                  <label className="block text-sm font-medium text-slate-400 mb-1.5 ml-1">Assign To (Multiple)</label>
+                  <div className="glass-card max-h-40 overflow-y-auto p-3 space-y-2 custom-scrollbar">
+                    {employees.map(emp => (
+                      <label key={emp._id} className="flex items-center gap-3 p-2 hover:bg-slate-800/50 rounded-lg cursor-pointer transition-colors group">
+                        <input 
+                          type="checkbox"
+                          className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900"
+                          checked={formData.assignedTo.includes(emp._id)}
+                          onChange={() => toggleEmployeeSelection(emp._id)}
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-slate-200 group-hover:text-white transition-colors">{emp.name}</span>
+                          <span className="text-[10px] text-slate-500">{emp.email}</span>
+                        </div>
+                      </label>
+                    ))}
+                    {employees.length === 0 && (
+                      <p className="text-[10px] text-amber-500 py-2 flex items-center gap-1">
+                        <AlertCircle size={12} /> No approved employees found.
+                      </p>
+                    )}
                   </div>
-                  {employees.length === 0 && (
-                    <p className="text-[10px] text-amber-500 mt-1 flex items-center gap-1">
-                      <AlertCircle size={12} /> No approved employees found.
-                    </p>
-                  )}
+                  <p className="text-[10px] text-slate-500 mt-2 ml-1">
+                    Selected: <span className="text-indigo-400 font-bold">{formData.assignedTo.length}</span> employees
+                  </p>
                 </div>
 
                 <div className="flex gap-3 pt-4">
@@ -213,7 +237,7 @@ const Tasks = () => {
                   <button 
                     type="submit"
                     className="flex-1 btn-primary"
-                    disabled={!formData.assignedTo}
+                    disabled={formData.assignedTo.length === 0}
                   >
                     Assign Task
                   </button>

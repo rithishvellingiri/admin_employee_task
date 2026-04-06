@@ -57,7 +57,7 @@ const Login = () => {
                 type="email"
                 required
                 className="w-full glass-input pl-10"
-                placeholder="name@company.com"
+                placeholder=""
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -72,7 +72,7 @@ const Login = () => {
                 type="password"
                 required
                 className="w-full glass-input pl-10"
-                placeholder="••••••••"
+                placeholder=""
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
@@ -103,7 +103,7 @@ const Login = () => {
         </p>
 
         <div className="mt-8 pt-6 border-t border-slate-800 text-xs text-center text-slate-500 italic">
-          Try admin@example.com / admin123
+          demo admin account: admin@example.com / admin123
         </div>
       </motion.div>
     </div>

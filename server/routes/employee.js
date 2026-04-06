@@ -8,7 +8,7 @@ const { protect } = require('../middleware/auth');
 // @access  Private/Employee
 router.get('/tasks', protect, async (req, res) => {
   try {
-    const tasks = await Task.find({ assignedTo: req.user._id });
+    const tasks = await Task.find({ assignedTo: { $in: [req.user._id] } });
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ message: error.message });

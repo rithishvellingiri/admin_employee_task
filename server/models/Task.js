@@ -9,11 +9,11 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  assignedTo: {
+  assignedTo: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Employee',
     required: true,
-  },
+  }],
   status: {
     type: String,
     enum: ['Pending', 'In Progress', 'Completed'],

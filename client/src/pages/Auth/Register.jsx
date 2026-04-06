@@ -53,7 +53,7 @@ const Register = () => {
                   type="text"
                   required
                   className="w-full glass-input pl-10"
-                  placeholder="John Doe"
+                  placeholder=""
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
@@ -84,7 +84,7 @@ const Register = () => {
                 type="email"
                 required
                 className="w-full glass-input pl-10"
-                placeholder="name@company.com"
+                placeholder="name@gmail.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -99,7 +99,7 @@ const Register = () => {
                 type="password"
                 required
                 className="w-full glass-input pl-10"
-                placeholder="••••••••"
+                placeholder=""
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />

@@ -42,10 +42,11 @@ router.post('/tasks', protect, admin, async (req, res) => {
   const { title, description, assignedTo } = req.body;
 
   try {
+    // assignedTo is expected to be an array of IDs
     const task = await Task.create({
       title,
       description,
-      assignedTo,
+      assignedTo: Array.isArray(assignedTo) ? assignedTo : [assignedTo],
     });
 
     if (task) {
